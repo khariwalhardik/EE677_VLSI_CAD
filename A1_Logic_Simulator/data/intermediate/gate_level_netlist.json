@@ -1,0 +1,61 @@
+{
+    "entity": "mux2to1",
+    "primary_inputs": [
+        "a",
+        "b",
+        "sel"
+    ],
+    "primary_outputs": [
+        "y"
+    ],
+    "internal_signals": [
+        "nsel",
+        "a_and",
+        "b_and"
+    ],
+    "gates": [
+        {
+            "name": "n1",
+            "type": "NOT",
+            "inputs": [
+                "sel"
+            ],
+            "outputs": [
+                "nsel"
+            ]
+        },
+        {
+            "name": "n2",
+            "type": "AND",
+            "inputs": [
+                "a",
+                "nsel"
+            ],
+            "outputs": [
+                "a_and"
+            ]
+        },
+        {
+            "name": "n3",
+            "type": "AND",
+            "inputs": [
+                "b",
+                "sel"
+            ],
+            "outputs": [
+                "b_and"
+            ]
+        },
+        {
+            "name": "n4",
+            "type": "OR",
+            "inputs": [
+                "a_and",
+                "b_and"
+            ],
+            "outputs": [
+                "y"
+            ]
+        }
+    ]
+}
