@@ -20,14 +20,14 @@ def parse_pla(filename: str) -> PLA:
             if not line or line.startswith("#"):  # skip comments/empty
                 continue
 
-            # Header lines
-            if line.startswith(".i"):
+            # Header lines (check full tokens, not just prefix!)
+            if line.startswith(".i "):  # number of inputs
                 pla.num_inputs = int(line.split()[1])
-            elif line.startswith(".o"):
+            elif line.startswith(".o "):  # number of outputs
                 pla.num_outputs = int(line.split()[1])
-            elif line.startswith(".ilb"):
+            elif line.startswith(".ilb"):  # input labels
                 pla.input_labels = line.split()[1:]
-            elif line.startswith(".ob"):
+            elif line.startswith(".ob"):  # output labels
                 pla.output_labels = line.split()[1:]
             elif line.startswith(".e"):
                 break
