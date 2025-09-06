@@ -34,3 +34,7 @@ if __name__ == "__main__":
         print(f"Output {j} ON-set:")
         for c in F[j]:
             print("  ", c)
+
+        print(f"Output {j} DC-set:")
+        for c in D[j]:
+            print("  ", c)
