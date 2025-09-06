@@ -1,0 +1,16 @@
+# This is a comment line.
+# PLA file for a full-adder.
+.i 3
+.o 2
+.ilb a b cin
+.ob sum cout
+# a b cin | sum cout
+000 00
+001 10
+010 10
+011 01
+100 10
+101 01
+110 01
+111 11
+.e

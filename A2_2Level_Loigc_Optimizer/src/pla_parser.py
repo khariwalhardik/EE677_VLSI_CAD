@@ -43,7 +43,8 @@ def parse_pla(filename: str) -> PLA:
 
 if __name__ == "__main__":
     # quick test
-    pla = parse_pla("inputs/example1.pla")
+    input_file_name=input("Enter the input file Name from input folder:\n")
+    pla = parse_pla(f'inputs/{input_file_name}.pla')
     print(pla)
     print("Inputs:", pla.input_labels)
     print("Outputs:", pla.output_labels)
