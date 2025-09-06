@@ -1,7 +1,7 @@
 import ast
 import operator
 
-# Define safe operators
+# Safe operators
 ops = {
     ast.BitAnd: operator.and_,
     ast.BitOr: operator.or_,
@@ -10,7 +10,7 @@ ops = {
 
 def safe_eval(expr, variables):
     """
-    Safely evaluate a boolean expression using AST
+    Safely evaluate a boolean expression using AST.
     expr: string e.g. '(a & (~sel)) | (b & sel)'
     variables: dict {'a':0, 'b':1, 'sel':0}
     """
@@ -22,20 +22,27 @@ def safe_eval(expr, variables):
         elif isinstance(node, ast.Constant):
             return node.value
         elif isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Invert):
-            return 1 - _eval(node.operand)  # handle ~ as NOT (binary logic)
+            return 1 - _eval(node.operand)  # ~ as NOT
         elif isinstance(node, ast.BinOp):
             if isinstance(node.op, ast.BitAnd):
                 return _eval(node.left) & _eval(node.right)
             elif isinstance(node.op, ast.BitOr):
                 return _eval(node.left) | _eval(node.right)
+            elif isinstance(node.op, ast.BitXor):
+                return _eval(node.left) ^ _eval(node.right)
         raise ValueError("Unsupported expression")
 
     return _eval(node)
 
+
 def process_files(expr_file, input_file, output_file):
-    # Load boolean expression
+    # Load multiple boolean expressions
+    expressions = {}
     with open(expr_file, "r") as f:
-        expr = f.read().strip()
+        for line in f:
+            if "=" in line:
+                out_name, expr = line.split("=", 1)
+                expressions[out_name.strip()] = expr.strip()
 
     # Read inputs
     with open(input_file, "r") as f:
@@ -48,17 +55,17 @@ def process_files(expr_file, input_file, output_file):
 
     for row in input_rows:
         variables = {headers[i]: int(row[i]) for i in range(len(headers))}
-        out_val = safe_eval(expr, variables)
-        results.append(str(out_val))
+        out_vals = {name: safe_eval(expr, variables) for name, expr in expressions.items()}
+        results.append(out_vals)
 
-    # Write outputs only
+    # Write outputs only (one column per output)
     with open(output_file, "w") as f:
-        f.write("OUTPUT\n")
+        f.write(" ".join(expressions.keys()) + "\n")
         for r in results:
-            f.write(r + "\n")
+            f.write(" ".join(str(r[name]) for name in expressions.keys()) + "\n")
 
 
-# # Example usage
+# Example usage
 # if __name__ == "__main__":
 #     process_files("gate_level_netlist_slc.txt", "inputs.txt", "outputs.txt")
 #     print("Processed files successfully.")

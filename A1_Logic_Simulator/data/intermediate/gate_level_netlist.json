@@ -6,7 +6,8 @@
         "sel"
     ],
     "primary_outputs": [
-        "y"
+        "y1",
+        "y2"
     ],
     "internal_signals": [
         "nsel",
@@ -54,7 +55,17 @@
                 "b_and"
             ],
             "outputs": [
-                "y"
+                "y1"
+            ]
+        },
+        {
+            "name": "n5",
+            "type": "NOT",
+            "inputs": [
+                "y1"
+            ],
+            "outputs": [
+                "y2"
             ]
         }
     ]

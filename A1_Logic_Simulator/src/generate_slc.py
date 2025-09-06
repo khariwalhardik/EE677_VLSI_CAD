@@ -28,15 +28,17 @@ def generate_expression(json_file, out_file):
         else:
             raise ValueError(f"Unknown gate type: {gate['type']}")
 
-    # Assume single primary output for now
-    output_signal = netlist_json["primary_outputs"][0]
-    expr = expand(output_signal)
+    # Handle multiple outputs
+    output_expressions = {}
+    for output_signal in netlist_json["primary_outputs"]:
+        output_expressions[output_signal] = expand(output_signal)
 
     # Save to file
     with open(out_file, "w") as f:
-        f.write(expr + "\n")
+        for name, expr in output_expressions.items():
+            f.write(f"{name} = {expr}\n")
 
-    return expr
+    return output_expressions
 
 
 # # Example usage

@@ -1,1 +1,2 @@
-((a & (~sel)) | (b & sel))
+y1 = ((a & (~sel)) | (b & sel))
+y2 = (~((a & (~sel)) | (b & sel)))
