@@ -1,45 +1,29 @@
-from cube import Cube
+from .cube import Cube
 
 def generate_prime_implicants(F, D):
     """
     Generate prime implicants from ON-set F and don't-care set D.
-
-    Args:
-        F: set of Cube objects representing ON-set
-        D: set of Cube objects representing don't-care set
-
-    Returns:
-        prime_implicants: set of Cube objects representing prime implicants
     """
-    # Combine F and D for merging
     all_cubes = F.union(D)
-    current_level = set(F)  # start with ON-set cubes
-    prime_implicants = set()  # final primes
+    current_level = set(F)  # start with ON-set
+    prime_implicants = set()
 
     while current_level:
         next_level = set()
-        merged_cubes = set()  # track cubes that were merged
+        used = set()
 
         current_list = list(current_level)
-        used = set()  # mark which cubes got merged
-
-        # Try merging each pair of cubes
         for i in range(len(current_list)):
             for j in range(i + 1, len(current_list)):
-                c1 = current_list[i]
-                c2 = current_list[j]
-                merged = c1.merge(c2)
+                merged = current_list[i].merge(current_list[j])
                 if merged:
                     next_level.add(merged)
-                    used.add(c1)
-                    used.add(c2)
+                    used.add(current_list[i])
+                    used.add(current_list[j])
 
-        # Cubes that could not be merged are prime implicants
-        for c in current_level:
-            if c not in used:
-                prime_implicants.add(c)
+        # Add cubes that could not be merged to prime implicants
+        prime_implicants.update(c for c in current_level if c not in used)
 
-        # Move to next level
         current_level = next_level
 
     return prime_implicants
@@ -51,9 +35,8 @@ def generate_prime_implicants(F, D):
 if __name__ == "__main__":
     from cube import Cube
 
-    # Example ON-set
     F = {Cube("110"), Cube("111"), Cube("101")}
-    D = {Cube("011")}  # optional don't-cares
+    D = {Cube("011")}
 
     primes = generate_prime_implicants(F, D)
     print("Prime Implicants:")
