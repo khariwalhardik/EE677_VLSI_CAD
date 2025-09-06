@@ -1,0 +1,4 @@
+inputs: x y z
+outputs: sum carry
+sum = x' y' z + x' y z' + x y' z' + x y z
+carry = x' y z + x y' z + x y z' + x y z
