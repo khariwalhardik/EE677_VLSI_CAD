@@ -1,0 +1,4 @@
+inputs: a b c
+outputs: f0 f1
+f0 = (a & ~b & c) | (~a & b)
+f1 = (a & b) | (~c)
