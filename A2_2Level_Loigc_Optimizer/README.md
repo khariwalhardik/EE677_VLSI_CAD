@@ -1,145 +1,125 @@
-# 2-Level Logic Optimizer (EE677 VLSI CAD Assignment)
+# 2-Level Logic Optimizer
 
-**Author:** Hardik Khariwal
-**Course:** EE677 – Foundations of VLSI CAD
-
----
-
-## Project Overview
-
-This project implements a **2-level logic optimizer** for Boolean functions in **PLA (Programmable Logic Array) format**.
-It reads a PLA file, generates cubes for the ON-set and don't-care set, computes **prime implicants**, applies a **heuristic cover algorithm** to select a minimal set of primes, and writes the optimized function back to a PLA file.
-
-The optimizer supports **multi-output functions** and is designed for **educational purposes** as part of the EE677 course.
+This project implements a **two-level Boolean logic optimizer**.
+It supports **PLA format** (Programmable Logic Array) and **Boolean expression text files**, with conversion between the two.
+The optimizer uses **prime implicant generation** and a **heuristic cover selection** approach, inspired by Espresso/Quine–McCluskey.
 
 ---
 
-## Folder Structure
+## 📂 Folder Structure
 
 ```
-project_root/
-├─ inputs/                  # Input PLA files go here
-├─ outputs/                 # Optimized PLA files will be written here
-├─ src/                     # Python modules
-│   ├─ cube.py              # Boolean cube representation and operations
-│   ├─ pla_parser.py        # PLA file parser
-│   ├─ pla_to_cubes.py      # Convert PLA cubes to Cube objects
-│   ├─ prime_generator.py   # Generate prime implicants
-│   ├─ heuristic_cover.py   # Heuristic minimal cover selection
-│   └─ pla_writer.py        # Write optimized cubes to PLA
-├─ main.py                  # Entry point to run the optimizer
-├─ PLA_format.md             # PLA format specification and examples
-├─ ProblemStatement.md       # Assignment problem statement
-└─ README.md                # Project documentation (this file)
+.
+├── inputs/
+│   ├── pla/        # Input .pla files
+│   └── txt/        # Input Boolean expressions (.txt)
+│
+├── outputs/
+│   ├── pla/        # Optimized PLA files
+│   └── txt/        # SOP Boolean expressions from PLA
+│
+├── src/            # Source code
+│   ├── pla_parser.py
+│   ├── pla_to_cubes.py
+│   ├── pla_writer.py
+│   ├── pla_to_sop.py
+│   ├── sop_to_pla.py
+│   ├── prime_generator.py
+│   ├── heuristic_cover.py
+│   └── main.py     # Entry point
+│
+├── ProblemStatement.md
+├── PLA_Format.md
+└── README.md
 ```
 
 ---
 
-## Documentation
+## 🚀 Features
 
-* **[ProblemStatement.md](ProblemStatement.md)** – Explains the assignment, objectives, and detailed problem description.
-* **[PLA\_format.md](PLA_format.md)** – Describes the PLA file format, input/output conventions, and examples.
+* Read Boolean expressions in **text format**
+
+  ```
+  inputs: a b c
+  outputs: f
+  f = (a & ~b) | (~a & c)
+  ```
+* Convert Boolean text to **PLA format**
+* Convert PLA back to **Boolean SOP expressions**
+* Optimize multi-output PLA files with **prime implicant merging + heuristic cover**
+* Works with **don’t cares** as well
+* Clean output in both **PLA** and **SOP text**
 
 ---
 
-## How to Use the Project
+## ⚡ Usage
 
-1. **Clone the repository**
+### 1. Run the Optimizer
 
 ```bash
-git clone <your-repo-url>
-cd <your-repo-folder>
+python src/main.py
 ```
 
-2. **Place PLA files in the `inputs/` folder**
+You will be prompted:
 
-* Example: `inputs/example1.pla`
+* `Select input type:`
 
-3. **Run the optimizer**
+  * `1` → Text file (`inputs/txt/`)
+  * `2` → PLA file (`inputs/pla/`)
 
-```bash
-python main.py
-```
+Enter the base filename (without extension).
+The tool will:
 
-* Enter the **input PLA filename** (relative to `inputs/`):
-
-```
-Enter the input file Name from input folder:
-example1.pla
-```
-
-4. **Check the output**
-
-* The optimized PLA will be written to the `outputs/` folder:
-
-```
-outputs/example1_optimized.pla
-```
-
-* Open the PLA file to see the reduced number of product terms.
+1. Convert text → PLA (if needed)
+2. Run optimization
+3. Save results in `outputs/pla/` and `outputs/txt/`
 
 ---
 
-## Example Workflow
+### 2. Example Input (Text)
 
-**Input PLA (`inputs/example1.pla`):**
+`inputs/txt/example_expr.txt`:
 
-```pla
-.i 3
-.o 1
-.ilb a b c
-.ob f
-110 1
-111 1
-001 1
-011 1
-101 1
-.e
+```
+inputs: x y z
+outputs: f
+f = (x & (~y | z)) | (~x & y & z)
 ```
 
-**Output PLA (`outputs/example1_optimized.pla`):**
+---
 
-```pla
-.i 3
-.o 1
-.ilb a b c
-.ob f
-11- 1
-1-1 1
-.e
+### 3. Example Optimized Output
+
+* Optimized PLA → `outputs/pla/example_expr.pla`
+* SOP Expression → `outputs/txt/example_expr_output.txt`
+
+```
+inputs: x y z
+outputs: f
+f = (x & ~y) | (x & z) | (~x & y & z)
 ```
 
-> The output shows a **reduced set of cubes**, covering the same ON-set as the input.
+---
+## Example Run
+
+Below is an example showing the program execution for both input types:
+
+- **Left:** Input from a Boolean Expression Text File (`.txt`)
+- **Right:** Input from a PLA File (`.pla`)
+
+![Example Run](docs/screenshots/example_run.png)
+
+## 📘 References
+
+* **Quine–McCluskey Algorithm** – for prime implicant generation
+* **Espresso Logic Minimizer** – inspiration for heuristic cover
+* [PLA Format](./PLA_Format.md) – file format details
+* [Problem Statement](./ProblemStatement.md) – original assignment/problem description
 
 ---
 
-## Project Workflow (High-level)
+## 👨‍💻 Author
 
-1. **Parse PLA** → `pla_parser.py`
-2. **Convert to cubes** → `pla_to_cubes.py`
-3. **Generate prime implicants** → `prime_generator.py`
-4. **Select heuristic minimal cover** → `heuristic_cover.py`
-5. **Write optimized PLA** → `pla_writer.py`
-
----
-
-## Notes
-
-* The heuristic cover algorithm is **fast** but may not always produce the exact minimal SOP.
-* For exact minimal results, **Quine–McCluskey** or **Espresso exact mode** would be required.
-* Multi-output functions are supported; each output is optimized independently.
-
----
-
-## Dependencies
-
-* Python 3.x
-* No external libraries required
-
----
-
-## License
-
-This project is for **educational purposes** as part of EE677 VLSI CAD. All rights reserved.
+**Hardik Khariwal** · Department of Electrical Engineering · *IIT Bombay*
 
 
