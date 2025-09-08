@@ -1,3 +1,0 @@
-inputs: a b c
-outputs: f
-f = a b c' + a b c + a' b' c + a' b c + a b' c
