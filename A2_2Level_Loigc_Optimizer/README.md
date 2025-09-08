@@ -107,7 +107,8 @@ Below is an example showing the program execution for both input types:
 - **Left:** Input from a Boolean Expression Text File (`.txt`)
 - **Right:** Input from a PLA File (`.pla`)
 
-![Example Run](docs/screenshots/example_run.png)
+
+<img width="1382" height="337" alt="image" src="https://github.com/user-attachments/assets/7df5dd71-9ebb-4232-9d08-00f6deaf8ea1" />
 
 ## 📘 References
 
